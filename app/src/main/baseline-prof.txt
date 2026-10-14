@@ -1,0 +1,28 @@
+# ================================================================
+# Baseline Profile — 安装时 AOT 预编译列表
+# ================================================================
+# 格式说明:
+#   Lpackage/ClassName;              — 标记该类为启动关键类 (class rule，无方法级标记)
+#   HSPLpackage/ClassName;->method   — 标记方法为 Hot + Startup + Post (method rule)
+#
+# ProfileInstaller 在安装时将本文件提交给 ART，
+# ART 在设备空闲时对列表中的类/方法进行 AOT 编译。
+# 首次启动即可跳过解释执行，直接运行机器码。
+# ================================================================
+
+# === 启动关键类 (class rule — 不加 H/S/P 标记) ===
+Lcom/example/mvvm/MvvmApplication;
+Lcom/example/mvvm/MainActivity;
+Lcom/example/mvvm/MainViewModel;
+
+# === 启动热路径方法 (method rule — HSPL 前缀) ===
+HSPLcom/example/mvvm/MainActivity;-><init>()V
+HSPLcom/example/mvvm/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/example/mvvm/MainViewModel;-><init>()V
+
+# ================================================================
+# 未来扩展: 每次新增 Activity / ViewModel / 复杂初始化逻辑后，
+# 在此追加对应类名。
+# 准确的热点列表应通过 Jetpack Macrobenchmark 的
+# BaselineProfileRule 在真机上跑测自动生成。
+# ================================================================
